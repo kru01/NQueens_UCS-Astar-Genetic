@@ -40,8 +40,8 @@ def main():
         print(f'--{numQueens} Queens Genetic Algorithm--')
         print(f'Solved in Generation {problem.generation - 1}')
     
-    print(f'Execution time: {(t1 - t0) / 10**6:10.4f} ms')
-    print(f'Memory usage:   {peakMemory / 10**6:10.4f} MB')
+    print(f'Execution time: {(t1 - t0) / 10**6:15.4f} ms')
+    print(f'Memory usage:   {peakMemory / 10**6:15.4f} MB')
     print(f'Solution: {solution}\n')
     problem.drawBoard(solution)
     sys.exit(0)
