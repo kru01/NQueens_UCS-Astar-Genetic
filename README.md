@@ -11,7 +11,7 @@
 - Initially, all the queens are placed at row -1, each column is occupied by exactly one queen.
 - The solution for a specific N will always be the same no matter how many times it's run.
 
-```
+```text
 --8 Queens A*--
 Execution time:         16.0000 ms
 Memory usage:            0.0278 MB
@@ -37,7 +37,7 @@ Solution: [7, 1, 3, 0, 6, 4, 2, 5]
 - The fittest chromosome is one where the number of attacking pairs of queens is 0. Mutation probability is set to 0.8.
 - **The algorithm takes ***very long*** to find a solution.**
 
-```
+```text
 --8 Queens Genetic Algorithm--
 Solved in Generation 137155
 Execution time:    1696469.0000 ms
