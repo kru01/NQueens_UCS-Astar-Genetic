@@ -1,17 +1,20 @@
 import random
 
 class NQueens:
-    def __init__(self, numQueens) -> None:
+    def __init__(self, numQueens, isIncremental=True) -> None:
         self.numQueens = numQueens
-        self.initState = (-1,) * numQueens
+        self.isIncremental = isIncremental
+        if isIncremental: self.initState = (-1,) * numQueens
+        else: self.initState = tuple([random.randrange(0, numQueens) for _ in range(numQueens)])
 
     def checkConfict(self, r1, c1, r2, c2) -> bool:
         return r1 == r2 or c1 == c2 or abs(r1 - r2) == abs(c1 - c2)
     
     def goalTest(self, state) -> bool:
-        try:
-            if state[-1] == -1: return False
-        except IndexError: return True
+        if self.isIncremental:
+            try:
+                if state[-1] == -1: return False
+            except IndexError: return True
 
         for c1, r1 in enumerate(state):
             for c2, r2 in enumerate(state):
@@ -20,19 +23,31 @@ class NQueens:
         return True
     
     def getActions(self, state) -> list:
-        if state[-1] != -1: return []
-        validActions = list(range(self.numQueens))
-        currCol = state.index(-1)
-        for currRow in range(self.numQueens):
-            for c, r in enumerate(state[:currCol]):
-                if currRow in validActions and self.checkConfict(currRow, currCol, r, c):
-                    validActions.remove(currRow)
+        if self.isIncremental:
+            if state[-1] != -1: return []
+            validActions = list(range(self.numQueens))
+            currCol = state.index(-1)
+            for currRow in range(self.numQueens):
+                for c, r in enumerate(state[:currCol]):
+                    if currRow in validActions and self.checkConfict(currRow, currCol, r, c):
+                        validActions.remove(currRow)
+            return validActions
+        
+        validActions = []
+        for currCol in range(self.numQueens):
+            for currRow in range(self.numQueens):
+                if currRow != state[currCol]: validActions.append((currRow, currCol))
         return validActions
     
     def placeQueen(self, state, action) -> tuple:
-        col = state.index(-1)
-        newState = list(state[:])
-        newState[col] = action
+        if self.isIncremental:
+            col = state.index(-1)
+            newState = list(state[:])
+            newState[col] = action
+            return tuple(newState)
+        
+        newState = list(state)
+        newState[action[1]] = action[0]
         return tuple(newState)
     
     def calcPathCost(self, cost) -> int:
@@ -78,17 +93,6 @@ class Node:
 
     def expand(self, problem) -> list:
         return [self.getChildNode(problem, action) for action in problem.getActions(self.state)]
-    
-    def getPath(self) -> list:
-        node, path = self, []
-        while node:
-            path.append(node)
-            node = node.parent
-        return list(reversed(path))
-    
-    def getSolution(self) -> list:
-        if not self.state: return None
-        return [node.action for node in self.getPath()[1:]]
     
     def __lt__(self, node):
         pass
@@ -162,8 +166,9 @@ class NQueensGenetic(NQueens):
         newPopulation = []
         probs = [self.calcProbability(chrom) for chrom in population]
         for _ in range(len(population)):
-            ch1 = self.pickRandomly(population, probs)
-            ch2 = self.pickRandomly(population, probs)
+            #ch1 = self.pickRandomly(population, probs)
+            #ch2 = self.pickRandomly(population, probs)
+            ch1, ch2 = random.choices(population, weights=probs, k=2)
             child = self.reproduce(ch1, ch2)
             if random.random() < mutationProb: child = self.mutate(child)
             if self.chromDisplay: self.print_chromosome(child)

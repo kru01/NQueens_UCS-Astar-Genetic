@@ -10,12 +10,22 @@ def main():
     if algo < 1: algo = 1
     elif algo > 3: algo = 3
 
-    problem = NQueens(numQueens)
+    if algo == 1 or algo == 2:
+        flag = bool(int(input("Place queens incrementally? (0 for random initial state): ")))
+        problem = NQueens(numQueens, flag)
+        if not flag:
+            print(f'Initial state: {list(problem.initState)}\n')
+            problem.drawBoard(problem.initState)
+            print("")
+    else:
+        flag = bool(int(input("Display chromosome? (0 for no): ")))
+        problem = NQueensGenetic(numQueens, flag)
+
     t0 = t1 = peakMemory = solution = 0
     if algo == 1:
         t0 = time.monotonic_ns()
         tracemalloc.start()
-        solution = uniformCostSearch(problem).getSolution()
+        solution = list(uniformCostSearch(problem).state)
         peakMemory = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
         t1 = time.monotonic_ns()
@@ -23,14 +33,12 @@ def main():
     elif algo == 2:
         t0 = time.monotonic_ns()
         tracemalloc.start()
-        solution = AstartSearch(problem).getSolution()
+        solution = list(AstartSearch(problem).state)
         peakMemory = tracemalloc.get_traced_memory()[1]
         tracemalloc.stop()
         t1 = time.monotonic_ns()
         print(f'--{numQueens} Queens A*--')
     elif algo == 3:
-        chromDisplay = bool(int(input("Display chromosome? (0 for no): ")))
-        problem = NQueensGenetic(numQueens, chromDisplay)
         t0 = time.monotonic_ns()
         tracemalloc.start()
         solution = handleGeneticAlgo(problem)
