@@ -32,6 +32,10 @@
 
 ### UCS and A*
 
+- There are 2 versions of the handleSearch function, one has `expanded` as a `list` and the other a `set`.
+   - The `list` version runs slower but saves more memory while the `set` one is the exact opposite.
+   - UCS should always use the latter, otherwise it will literally take ***an eternity*** to find a solution, especially in Complete-state formulation.
+
 #### Complete-state formulation
 - Initially, all queens are placed on random rows. Each column is occupied by exactly one queen.
 - The solution varies depending on the initial state.

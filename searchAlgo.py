@@ -3,11 +3,26 @@ import heapq
 
 def uniformCostSearch(problem : NQueens) -> Node:
     node = NodeUCS(problem.initState)
-    return handleSearch(node, problem)
+    return handleSearchSet(node, problem)
 
 def AstartSearch(problem : NQueens) -> Node:
     node = NodeAstar(problem.initState, heuristic=problem.calcHeuristic(problem.initState))
     return handleSearch(node, problem)
+
+def handleSearchSet(node: Node, problem: NQueens) -> Node:
+    expanded = set()
+    frontier = [node]
+    heapq.heapify(frontier)
+    expanded.add(problem.initState)
+    while frontier:
+        current = heapq.heappop(frontier)
+        if problem.goalTest(current.state): return current
+        children = current.expand(problem)
+        for i in children:
+            if i.state not in expanded:
+                heapq.heappush(frontier, i)
+                expanded.add(i.state)
+    return Node((), None, None)
 
 def handleSearch(node: Node, problem: NQueens) -> Node:
     frontier = [node]
