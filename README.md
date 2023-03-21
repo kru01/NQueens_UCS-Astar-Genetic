@@ -28,7 +28,8 @@
 
 ## Content
 
-- Read the attached pdf for full details.
+- The attached pdf contains all the tasks and requirements of the lab.
+- LabReport includes my documentation for the code and all the experimentations that have been done.
 
 ### UCS and A*
 

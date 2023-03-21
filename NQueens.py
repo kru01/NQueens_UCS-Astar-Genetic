@@ -7,7 +7,7 @@ class NQueens:
         if isIncremental: self.initState = (-1,) * numQueens
         else: self.initState = tuple([random.randrange(0, numQueens) for _ in range(numQueens)])
 
-    def checkConfict(self, r1, c1, r2, c2) -> bool:
+    def checkConflict(self, r1, c1, r2, c2) -> bool:
         return r1 == r2 or c1 == c2 or abs(r1 - r2) == abs(c1 - c2)
     
     def goalTest(self, state) -> bool:
@@ -18,7 +18,7 @@ class NQueens:
 
         for c1, r1 in enumerate(state):
             for c2, r2 in enumerate(state):
-                if (r1, c1) != (r2, c2) and self.checkConfict(r1, c1, r2, c2):
+                if (r1, c1) != (r2, c2) and self.checkConflict(r1, c1, r2, c2):
                     return False                
         return True
     
@@ -29,7 +29,7 @@ class NQueens:
             currCol = state.index(-1)
             for currRow in range(self.numQueens):
                 for c, r in enumerate(state[:currCol]):
-                    if currRow in validActions and self.checkConfict(currRow, currCol, r, c):
+                    if currRow in validActions and self.checkConflict(currRow, currCol, r, c):
                         validActions.remove(currRow)
             return validActions
         
@@ -57,7 +57,7 @@ class NQueens:
         conflicts = 0
         for c1, r1 in enumerate(state):
             for c2, r2 in enumerate(state[c1 + 1:], c1 + 1):
-                if self.checkConfict(r1, c1, r2, c2): conflicts += 2
+                if self.checkConflict(r1, c1, r2, c2): conflicts += 2
         return conflicts
     
     def drawBoard(self, board) -> None:
